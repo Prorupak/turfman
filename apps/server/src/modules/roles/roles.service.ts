@@ -12,6 +12,7 @@ import {
 import { Role, RoleDocument } from './roles.schema';
 import { roleSelect } from './constants';
 import { messages } from 'src/constants/messages';
+import { RoleDto } from './dtos/role.dto';
 
 @Injectable()
 export class RolesService {
@@ -19,18 +20,29 @@ export class RolesService {
 
   constructor(@InjectModel(Role.name) private roleModel: Model<RoleDocument>) {}
 
-  async findAll() {
-    return this.roleModel
+  async findAll(): Promise<RoleDto[]> {
+    const roles = await this.roleModel
       .find()
       .sort({ sort: 'asc' })
       .select(roleSelect)
+      .lean()
       .exec();
+
+    return roles.map((role) => ({
+      name: role.name,
+      sort: role.sort,
+      default: role.default,
+      createdAt: role.createdAt,
+      updatedAt: role.updatedAt,
+      id: role.id,
+    })) as RoleDto[];
   }
 
-  async findById(dto: SearchRoleDto) {
+  async findById(dto: SearchRoleDto): Promise<RoleDto> {
     const role = await this.roleModel
       .findById(dto.id)
       .select(roleSelect)
+      .lean()
       .exec();
 
     if (!role) {
@@ -40,7 +52,14 @@ export class RolesService {
       });
     }
 
-    return role;
+    return {
+      name: role?.name,
+      sort: role?.sort,
+      default: role?.default,
+      createdAt: role?.createdAt,
+      updatedAt: role?.updatedAt,
+      id: role?.id?.toString(),
+    };
   }
 
   private async maxSort() {
@@ -52,7 +71,7 @@ export class RolesService {
     return result ? result.sort : 0;
   }
 
-  async create(dto: CreateRoleDto) {
+  async create(dto: CreateRoleDto): Promise<RoleDto> {
     const session = await this.roleModel.startSession();
     session.startTransaction();
 
@@ -67,7 +86,14 @@ export class RolesService {
       await role.save({ session });
       this.logger.log(`[Create]: ${role.name}`);
       await session.commitTransaction();
-      return role;
+      return {
+        name: role.name,
+        sort: role.sort,
+        default: role.default,
+        createdAt: role.createdAt,
+        updatedAt: role.updatedAt,
+        id: role._id.toString(),
+      };
     } catch (error) {
       await session.abortTransaction();
       throw error;
@@ -76,7 +102,7 @@ export class RolesService {
     }
   }
 
-  async update(dto: UpdateRoleDto) {
+  async update(dto: UpdateRoleDto): Promise<RoleDto> {
     const session = await this.roleModel.startSession();
     session.startTransaction();
 
@@ -88,14 +114,26 @@ export class RolesService {
       }
 
       const role = await this.roleModel
-        .findByIdAndUpdate(dto.id, { name: dto.name }, { new: true, session })
+        .findByIdAndUpdate(
+          currentRole.id,
+          { name: dto.name },
+          { new: true, session },
+        )
         .select(roleSelect)
         .exec();
 
-      this.logger.log(`[Update]: ${role.name}`);
+      this.logger.log(`[Update]: ${role?.name}`);
       await session.commitTransaction();
-      return role;
+      return {
+        name: role?.name,
+        sort: role?.sort,
+        default: role?.default,
+        createdAt: role?.createdAt,
+        updatedAt: role?.updatedAt,
+        id: role?.id?.toString(),
+      };
     } catch (error) {
+      console.log({ error });
       await session.abortTransaction();
       throw error;
     } finally {

@@ -1,5 +1,6 @@
 export const roleSelect = {
-  id: true,
+  _id: 0,
+  id: '$_id',
   name: true,
   sort: true,
   default: true,

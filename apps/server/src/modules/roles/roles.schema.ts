@@ -7,7 +7,7 @@ export type RoleDocument = Role & Document;
 
 @Schema({
   collection: 'roles',
-  timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+  timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
 })
 export class Role extends Document {
   @Prop({
@@ -27,9 +27,15 @@ export class Role extends Document {
 
   @Prop({ type: Types.ObjectId, ref: 'UserRole' })
   userRoles: Types.ObjectId[];
+
+  @Prop({ type: Date, default: Date.now() })
+  createdAt: Date;
+
+  @Prop({ type: Date, default: Date.now() })
+  updatedAt: Date;
 }
 
 export const RoleSchema = SchemaFactory.createForClass(Role);
 
-// Adding an index for sort
 RoleSchema.index({ sort: 1 });
+RoleSchema.index({ createdAt: -1 });
