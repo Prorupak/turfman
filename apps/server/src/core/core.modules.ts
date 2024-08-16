@@ -6,6 +6,7 @@ import { BullModule } from '@nestjs/bull';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
+import { Config } from 'src/config/config.schema';
 
 const CORE_MODULES = [
   DatabaseModule,
@@ -16,7 +17,7 @@ const CORE_MODULES = [
   ScheduleModule.forRoot(),
   BullModule.forRootAsync({
     imports: [ConfigModule],
-    useFactory: async (configService: ConfigService) => ({
+    useFactory: async (configService: ConfigService<Config>) => ({
       redis: configService.get('REDIS_URL'),
       prefix: 'queue',
     }),
@@ -27,5 +28,6 @@ const CORE_MODULES = [
 
 @Module({
   imports: CORE_MODULES,
+  exports: CORE_MODULES,
 })
 export class CoreModule {}
