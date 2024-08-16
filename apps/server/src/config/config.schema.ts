@@ -10,7 +10,7 @@ export const configSchema = z.object({
   PUBLIC_URL: z.string().url(),
 
   // Database
-  DATABASE_URL: z.string().url().startsWith('mongodb://'),
+  DATABASE_URL: z.string().url().startsWith('mongodb+srv://'),
 
   // Redis
   REDIS_URL: z.string().url().startsWith('redis://').optional(),
