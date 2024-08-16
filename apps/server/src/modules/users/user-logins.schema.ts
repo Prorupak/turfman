@@ -11,12 +11,6 @@ export type UserLoginsDocument = Document & UserLogins;
   timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
 })
 export class UserLogins extends Document {
-  @Prop({
-    default: () => new mongoose.Types.ObjectId(),
-    required: true,
-  })
-  id: string;
-
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
   userId: string;
 

@@ -11,14 +11,6 @@ export type UserDocument = User & Document;
 export class User extends Document {
   @Prop({
     type: String,
-    required: true,
-    unique: true,
-    default: () => new Types.ObjectId(),
-  })
-  id: string;
-
-  @Prop({
-    type: String,
     required: [true, 'Username is required'],
     unique: true,
     minlength: [4, 'Username must be at least 4 characters long'],

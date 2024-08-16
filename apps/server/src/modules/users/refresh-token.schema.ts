@@ -11,14 +11,7 @@ export type RefreshTokenDocument = RefreshToken & Document;
   timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
 })
 export class RefreshToken extends Document {
-  @Prop({
-    type: mongoose.Schema.Types.UUID,
-    default: () => new mongoose.Types.ObjectId(),
-    required: true,
-  })
-  id: string;
-
-  @Prop({ type: mongoose.Schema.Types.UUID, ref: 'User', required: true })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
   userId: string;
 
   @Prop({ type: String, required: true })

@@ -12,14 +12,6 @@ export type RoleDocument = Role & Document;
 export class Role extends Document {
   @Prop({
     type: String,
-    required: true,
-    unique: true,
-    default: () => new Types.ObjectId(),
-  })
-  id: string;
-
-  @Prop({
-    type: String,
     required: [true, 'Role name is required'],
     unique: true,
     minlength: [2, 'Role name must be at least 2 characters long'],
