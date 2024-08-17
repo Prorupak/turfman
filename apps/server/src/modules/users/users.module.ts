@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from './users.schema';
-import { Role, RoleSchema } from '../roles/roles.schema';
-import { UserLogins, UserLoginsSchema } from './user-logins.schema';
+import { User, UserSchema } from './schemas/users.schema';
+import { Role, RoleSchema } from '../roles/schemas/roles.schema';
+import { UserLogins, UserLoginsSchema } from './schemas/user-logins.schema';
 
 @Module({
   imports: [

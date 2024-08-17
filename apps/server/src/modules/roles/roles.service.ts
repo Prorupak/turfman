@@ -9,7 +9,7 @@ import {
   SortRoleDto,
   UpdateRoleDto,
 } from './dtos';
-import { Role, RoleDocument } from './roles.schema';
+import { Role, RoleDocument } from './schemas/roles.schema';
 import { roleSelect } from './constants';
 import { messages } from 'src/constants/messages';
 import { RoleDto } from './dtos/role.dto';

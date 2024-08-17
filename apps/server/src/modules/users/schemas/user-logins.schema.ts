@@ -1,5 +1,3 @@
-// File path: src/schemas/user-logins.schema.ts
-
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';

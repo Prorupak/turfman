@@ -11,9 +11,9 @@ import { userDetailSelect, userSelect } from './constants';
 import { generateSkip } from 'src/utils/generate-skip.util';
 import { SECURITY_STAMPS_REDIS_KEY } from 'src/constants/auth';
 import { Random } from 'src/utils/random.util';
-import { Role, RoleDocument } from '../roles/roles.schema';
-import { User, UserDocument } from './users.schema';
-import { UserLogins, UserLoginsDocument } from './user-logins.schema';
+import { Role, RoleDocument } from '../roles/schemas/roles.schema';
+import { User, UserDocument } from './schemas/users.schema';
+import { UserLogins, UserLoginsDocument } from './schemas/user-logins.schema';
 
 @Injectable()
 export class UsersService {
