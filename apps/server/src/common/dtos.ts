@@ -1,10 +1,10 @@
 import { Type } from 'class-transformer';
 import {
+  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
-  IsUUID,
   Max,
   Min,
 } from 'class-validator';
@@ -58,8 +58,8 @@ export namespace FindOneParams {
     id: number;
   }
 
-  export class Uuid {
-    @IsUUID()
+  export class MongoId {
+    @IsMongoId()
     @IsString()
     @IsNotEmpty()
     @Type(() => String)

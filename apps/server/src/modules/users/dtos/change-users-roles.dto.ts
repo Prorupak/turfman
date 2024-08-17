@@ -1,13 +1,13 @@
 import {
   ArrayUnique,
   IsArray,
+  IsMongoId,
   IsNotEmpty,
   IsString,
-  IsUUID,
 } from 'class-validator';
 
 export class ChangeUserRolesDto {
-  @IsUUID()
+  @IsMongoId()
   @IsString()
   @IsNotEmpty()
   id: string;
