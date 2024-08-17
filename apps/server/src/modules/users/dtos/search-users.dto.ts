@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 import {
   ArrayMaxSize,
   ArrayUnique,
@@ -82,5 +82,6 @@ export class SearchUsersDto extends PaginationOffset {
   @IsObject()
   @IsOptional()
   @Type(() => SearchUsersSortDto)
+  @Transform(({ value }) => (value ? value : SearchUsersSortDto.initDefault()))
   sort: SearchUsersSortDto = SearchUsersSortDto.initDefault();
 }
