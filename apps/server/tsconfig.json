@@ -3,6 +3,7 @@
   "compilerOptions": {
     "module": "NodeNext",
     "outDir": "./dist",
-    "baseUrl": "./"
+    "baseUrl": "./",
+     "types": ["@types/jest"]
   }
 }
