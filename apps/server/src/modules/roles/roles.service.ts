@@ -62,7 +62,7 @@ export class RolesService {
     };
   }
 
-  private async maxSort() {
+  async maxSort() {
     const result = await this.roleModel
       .findOne()
       .sort({ sort: -1 })
@@ -78,12 +78,12 @@ export class RolesService {
     try {
       const maxSort = await this.maxSort();
 
-      const role = new this.roleModel({
+      const res = await this.roleModel.create({
         name: dto.name,
         sort: maxSort !== null ? maxSort + 1 : 1,
       });
 
-      await role.save({ session });
+      const role = res;
       this.logger.log(`[Create]: ${role.name}`);
       await session.commitTransaction();
       return {
@@ -92,7 +92,7 @@ export class RolesService {
         default: role.default,
         createdAt: role.createdAt,
         updatedAt: role.updatedAt,
-        id: role._id.toString(),
+        id: role?._id?.toString(),
       };
     } catch (error) {
       await session.abortTransaction();
@@ -133,7 +133,6 @@ export class RolesService {
         id: role?.id?.toString(),
       };
     } catch (error) {
-      console.log({ error });
       await session.abortTransaction();
       throw error;
     } finally {
