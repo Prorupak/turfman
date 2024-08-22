@@ -8,6 +8,7 @@ export const messages = {
     notFoundEntity: 'Entity not found',
     badQuery: 'Invalid query',
     badDto: 'Invalid data transfer object',
+    conflict: 'Conflict with existing document.',
     argument: 'Invalid argument',
     changeUserRoles: 'Cannot change user roles',
     changeSort: 'Cannot change sort order',
