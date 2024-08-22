@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -7,10 +7,10 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { patchNestJsSwagger } from 'nestjs-zod';
 
-import { AppModule } from './app.module';
 import { Config } from './config/config.schema';
 import ExpressApp from './adapters/express';
 import express from 'express';
+import { AppModule } from 'app.module';
 
 patchNestJsSwagger();
 
@@ -43,6 +43,17 @@ async function bootstrap() {
     app.use(helmet({ contentSecurityPolicy: false }));
   }
 
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      errorHttpStatusCode: 422,
+      forbidUnknownValues: true,
+      disableErrorMessages: process.env.NODE_ENV === 'production',
+      stopAtFirstError: true,
+    }),
+  );
+
   // Global Prefix
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
@@ -53,10 +64,8 @@ async function bootstrap() {
   // Swagger (OpenAPI Docs)
   // This can be accessed by visiting {SERVER_URL}/api/docs
   const config = new DocumentBuilder()
-    .setTitle('Reactive Resume')
-    .setDescription(
-      "Reactive Resume is a free and open source resume builder that's built to make the mundane tasks of creating, updating and sharing your resume as easy as 1, 2, 3.",
-    )
+    .setTitle('Buzz App')
+    .setDescription('')
     .addCookieAuth('Authentication', {
       type: 'http',
       in: 'cookie',

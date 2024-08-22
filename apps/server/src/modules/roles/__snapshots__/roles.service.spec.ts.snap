@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RolesService delete should rollback transaction on error during deletion 1`] = `"Delete failed"`;
+
+exports[`RolesService delete should throw an error when trying to delete a default role 1`] = `"Using default data"`;
+
+exports[`RolesService findById should throw a NotFound error if role is not found 1`] = `"Entity not found"`;
+
+exports[`RolesService sort should rollback transaction on error during sort update 1`] = `"Cannot change sort order"`;
+
+exports[`RolesService sort should throw an error if the sort value exceeds the max sort 1`] = `"Delete failed"`;
+
+exports[`RolesService sort should throw an error when sort value exceeds max sort value 1`] = `"Cannot change sort order"`;
+
+exports[`RolesService sort should throw an error when there is no change in sort order 1`] = `"No changes were made"`;
+
+exports[`RolesService update should rollback transaction on error during update 1`] = `"Update failed"`;
+
+exports[`RolesService update should throw an error when trying to update a default role 1`] = `"Using default data"`;

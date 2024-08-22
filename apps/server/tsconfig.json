@@ -1,8 +1,8 @@
 {
   "extends": "@repo/typescript-config/nestjs.json",
   "compilerOptions": {
-    "module": "NodeNext",
     "outDir": "./dist",
-    "baseUrl": "./"
+    "baseUrl": "./src",
+     "types": ["@types/jest"]
   }
 }
