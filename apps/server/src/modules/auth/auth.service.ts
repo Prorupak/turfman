@@ -345,7 +345,10 @@ export class AuthService {
     return runInTransaction(this.connection, async (session) => {
       const [hashPassword, role] = await Promise.all([
         this.hashPassword(dto.password),
-        this.roleModel.findOne({ name: 'User' }).session(session).exec(),
+        this.roleModel
+          .findOne({ name: dto.isAdmin ? 'user' : 'admin' })
+          .session(session)
+          .exec(),
       ]);
 
       if (!role) {
@@ -400,7 +403,7 @@ export class AuthService {
     user: Awaited<ReturnType<UsersService['findByUniqueWithDetail']>>,
     ipAddress: string,
   ) {
-    this.logger.log(`[Login]:${user.username}`);
+    this.logger.log(`[Login]:${user.email}`);
     return {
       accessToken: await this.generateAccessToken(user),
       refreshToken: await this.generateRefreshToken(user.id, ipAddress),
