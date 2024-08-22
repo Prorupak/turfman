@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -7,10 +7,10 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { patchNestJsSwagger } from 'nestjs-zod';
 
-import { AppModule } from './app.module';
 import { Config } from './config/config.schema';
 import ExpressApp from './adapters/express';
 import express from 'express';
+import { AppModule } from 'app.module';
 
 patchNestJsSwagger();
 
@@ -42,6 +42,17 @@ async function bootstrap() {
   if (process.env.NODE_ENV === 'production') {
     app.use(helmet({ contentSecurityPolicy: false }));
   }
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      errorHttpStatusCode: 422,
+      forbidUnknownValues: true,
+      disableErrorMessages: process.env.NODE_ENV === 'production',
+      stopAtFirstError: true,
+    }),
+  );
 
   // Global Prefix
   const globalPrefix = 'api';

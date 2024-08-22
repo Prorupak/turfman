@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { AppError } from 'src/common/errors';
+import { AppError } from 'common/errors';
 import {
   CreateRoleDto,
   DeleteRoleDto,
@@ -11,7 +11,7 @@ import {
 } from './dtos';
 import { Role, RoleDocument } from './schemas/roles.schema';
 import { roleSelect } from './constants';
-import { messages } from 'src/constants/messages';
+import { messages } from 'constants/messages';
 import { RoleDto } from './dtos/role.dto';
 
 @Injectable()

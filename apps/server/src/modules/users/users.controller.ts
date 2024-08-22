@@ -10,14 +10,20 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { FindOneParams } from 'src/common/dtos';
-import { AppError } from 'src/common/errors';
+import { FindOneParams } from 'common/dtos';
+import { AppError } from 'common/errors';
 
 import { ChangeUserRolesDto, SearchUsersDto } from './dtos';
 import { UsersService } from './users.service';
-import { messages } from 'src/constants/messages';
-import { Roles } from 'src/decorators/auth';
-import { ApiName } from 'src/decorators/openapi';
+import { messages } from 'constants/messages';
+import { Roles } from 'decorators/auth';
+import { ApiName } from 'decorators/openapi';
+import { SecureEndpoint } from 'guards';
+import {
+  ChangeUserRolesSwaggerDocs,
+  GetAllUsersSwaggerDocs,
+  GetUserByIdSwaggerDocs,
+} from './users-swagger.decorator';
 
 @Roles('Administrator')
 @ApiName()
@@ -26,12 +32,16 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get()
+  @SecureEndpoint.apply()
   @UsePipes(new ValidationPipe({ transform: true }))
+  @GetAllUsersSwaggerDocs()
   async getAll(@Query() dto: SearchUsersDto) {
     return this.usersService.findAll(dto);
   }
 
   @Get(':id')
+  @SecureEndpoint.apply()
+  @GetUserByIdSwaggerDocs()
   async getById(@Param() dto: FindOneParams.MongoId) {
     const result = await this.usersService.findByUnique({ id: dto.id });
 
@@ -46,7 +56,9 @@ export class UsersController {
   }
 
   @Patch(':id/roles')
+  @SecureEndpoint.apply()
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ChangeUserRolesSwaggerDocs()
   async changeRoles(@Body() dto: ChangeUserRolesDto) {
     await this.usersService.changeRoles(dto);
   }

@@ -10,9 +10,12 @@ export type RefreshTokenDocument = RefreshToken & Document;
 })
 export class RefreshToken extends Document {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true })
-  userId: string;
+  user: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({
+    type: String,
+    required: true,
+  })
   token: string;
 
   @Prop({ type: Date, required: true })

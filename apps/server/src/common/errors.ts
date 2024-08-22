@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
-import { EVENTS } from 'src/constants/socket';
-import { messages } from 'src/constants/messages';
+import { EVENTS } from 'constants/socket';
+import { messages } from 'constants/messages';
 
 export namespace AppError {
   export abstract class BasicError {

@@ -1,12 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document, HydratedDocument, Types } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 
-export type UserDocument = User & Document;
+export type UserDocument = HydratedDocument<User>;
 
 @Schema({
   collection: 'users',
-  timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+  timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
 })
 export class User extends Document {
   @Prop({
@@ -72,41 +72,47 @@ export class User extends Document {
   @Prop({ type: String })
   themeStyle?: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'UserRole' })
+  @Prop({ type: [Types.ObjectId], ref: 'UserRole', default: [] })
   userRoles: Types.ObjectId[];
 
-  @Prop({ type: Types.ObjectId, ref: 'UserLogins' })
+  @Prop({ type: [Types.ObjectId], ref: 'UserLogins' })
   userLogins: Types.ObjectId[];
 
-  @Prop({ type: Types.ObjectId, ref: 'RefreshToken' })
+  @Prop({ type: [Types.ObjectId], ref: 'RefreshToken' })
   refreshTokens: Types.ObjectId[];
 
-  @Prop({ type: Types.ObjectId, ref: 'VerificationToken' })
+  @Prop({ type: [Types.ObjectId], ref: 'VerificationToken' })
   verificationTokens: Types.ObjectId[];
 
-  @Prop({ type: Types.ObjectId, ref: 'Relationship' })
+  @Prop({ type: [Types.ObjectId], ref: 'Relationship' })
   followers: Types.ObjectId[];
 
-  @Prop({ type: Types.ObjectId, ref: 'Relationship' })
+  @Prop({ type: [Types.ObjectId], ref: 'Relationship' })
   followees: Types.ObjectId[];
 
-  @Prop({ type: Types.ObjectId, ref: 'RoomMember' })
+  @Prop({ type: [Types.ObjectId], ref: 'RoomMember' })
   roomMembers: Types.ObjectId[];
 
-  @Prop({ type: Types.ObjectId, ref: 'RoomMessage' })
+  @Prop({ type: [Types.ObjectId], ref: 'RoomMessage' })
   roomMessages: Types.ObjectId[];
 
-  @Prop({ type: Types.ObjectId, ref: 'Buzz' })
+  @Prop({ type: [Types.ObjectId], ref: 'Buzz' })
   buzzes: Types.ObjectId[];
 
-  @Prop({ type: Types.ObjectId, ref: 'BuzzReaction' })
+  @Prop({ type: [Types.ObjectId], ref: 'BuzzReaction' })
   buzzReactions: Types.ObjectId[];
 
-  @Prop({ type: Types.ObjectId, ref: 'Notification' })
+  @Prop({ type: [Types.ObjectId], ref: 'Notification' })
   notificationSource: Types.ObjectId[];
 
-  @Prop({ type: Types.ObjectId, ref: 'Notification' })
+  @Prop({ type: [Types.ObjectId], ref: 'Notification' })
   notificationTarget: Types.ObjectId[];
+
+  @Prop({ type: Date })
+  createdAt: Date;
+
+  @Prop({ type: Date })
+  updatedAt: Date;
 
   // Virtual field example
   get fullName() {
@@ -117,22 +123,9 @@ export class User extends Document {
   async validatePassword(password: string): Promise<boolean> {
     return bcrypt.compare(password, this.password);
   }
-
-  // Method to hash password before saving
-  async hashPassword(): Promise<void> {
-    this.password = await bcrypt.hash(this.password, 10);
-  }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-
-// Middleware to hash password before saving if modified
-UserSchema.pre<User>('save', async function (next) {
-  if (this.isModified('password')) {
-    await this.hashPassword();
-  }
-  next();
-});
 
 // Adding the virtual field to the schema
 UserSchema.virtual('fullName').get(function () {

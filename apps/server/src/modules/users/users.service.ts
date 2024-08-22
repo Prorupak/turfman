@@ -1,27 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { Connection, Model, Types } from 'mongoose';
 import _ from 'lodash';
-import { EmailState, makeHasState, SearchMatch } from 'src/common/enum';
-import { AppError } from 'src/common/errors';
+import { EmailState, makeHasState, SearchMatch } from 'common/enum';
+import { AppError } from 'common/errors';
 import { ChangeUserRolesDto, SearchUsersDto } from './dtos';
-import { RedisService } from 'src/core/redis/redis.service';
-import { messages } from 'src/constants/messages';
+import { RedisService } from 'core/redis/redis.service';
+import { messages } from 'constants/messages';
 import { userDetailSelect, userSelect } from './constants';
-import { generateSkip } from 'src/utils/generate-skip.util';
-import { SECURITY_STAMPS_REDIS_KEY } from 'src/constants/auth';
-import { Random } from 'src/utils/random.util';
+import { generateSkip } from 'utils/generate-skip.util';
+import { SECURITY_STAMPS_REDIS_KEY } from 'constants/auth';
+import { Random } from 'utils/random.util';
 import { Role, RoleDocument } from '../roles/schemas/roles.schema';
 import { User, UserDocument } from './schemas/users.schema';
 import { UserLogins, UserLoginsDocument } from './schemas/user-logins.schema';
+import {
+  UserRole,
+  UserRoleDocument,
+} from 'modules/roles/schemas/user-role.schema';
+import { runInTransaction } from 'utils';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Role.name) private roleModel: Model<RoleDocument>,
+    @InjectModel(UserRole.name) private userRoleModel: Model<UserRoleDocument>,
     @InjectModel(UserLogins.name)
     private userLoginsModel: Model<UserLoginsDocument>,
+    @InjectConnection() private readonly connection: Connection,
     private redisService: RedisService,
   ) {}
 
@@ -97,74 +104,126 @@ export class UsersService {
   }
 
   async findByUnique(idOrUsername: Partial<{ id: string; username: string }>) {
-    return this.userModel.findOne(idOrUsername).select(userSelect).exec();
+    return this.userModel
+      .findOne({
+        $or: [{ _id: idOrUsername.id }, { username: idOrUsername.username }],
+      })
+      .select(userSelect)
+      .exec();
   }
 
   async findByUniqueWithDetail(
-    idOrUsername: Partial<{ id: string; username: string }>,
-  ) {
-    return this.userModel.findOne(idOrUsername).select(userDetailSelect).exec();
+    idOrUsername: Partial<{
+      id: string;
+      username: string;
+    }>,
+  ): Promise<
+    Omit<User, 'userRoles'> & {
+      [key: string]: any | any[];
+    }
+  > {
+    const user = await this.userModel
+      .findOne({
+        $or: [{ _id: idOrUsername.id }, { username: idOrUsername.username }],
+      })
+      .select(userDetailSelect)
+      .populate('userRoles')
+      .lean()
+      .exec();
+
+    const roles = (user?.userRoles as unknown as UserRole[])?.map(
+      (role) => role.roles,
+    );
+
+    return {
+      ...user,
+      userRoles: roles,
+    };
   }
 
   async changeRoles(dto: ChangeUserRolesDto) {
-    const user = await this.userModel
-      .findById(dto.id)
-      .select('id securityStamp userRoles')
-      .populate('userRoles')
-      .exec();
+    return runInTransaction(this.connection, async (session) => {
+      const user = await this.userModel
+        .findById(dto.id)
+        .select('id securityStamp userRoles')
+        .populate('userRoles')
+        .session(session)
+        .lean()
+        .exec();
 
-    if (!user) {
-      throw new AppError.NotFound(messages.error.notFoundEntity).setParams({
-        entity: 'User',
-        id: dto.id,
-      });
-    }
-
-    const roleCount = await this.roleModel.countDocuments({
-      _id: { $in: dto.roleIds },
-    });
-
-    if (roleCount !== dto.roleIds.length) {
-      throw new AppError.Argument(messages.error.changeUserRoles);
-    }
-
-    const session = await this.userModel.startSession();
-    session.startTransaction();
-    try {
-      await this.roleModel
-        .deleteMany({
-          userId: user._id,
-          roleId: { $nin: dto.roleIds },
-        })
-        .session(session);
-
-      const newRoles = _(dto.roleIds)
-        .difference(user.userRoles.map((role) => role._id.toString()))
-        .map((roleId) => ({
-          userId: user._id,
-          roleId: new Types.ObjectId(roleId),
-        }))
-        .value();
-
-      if (newRoles.length) {
-        await this.roleModel.insertMany(newRoles, { session });
+      if (!user) {
+        throw new AppError.NotFound(messages.error.notFoundEntity).setParams({
+          entity: 'User',
+          id: dto.id,
+        });
       }
 
+      // Convert roleIds to ObjectId[]
+      const roleIds = dto.roleIds.map((id) => new Types.ObjectId(id));
+
+      // Check if all roles exist
+      const roleCount = await this.roleModel
+        .countDocuments({ _id: { $in: roleIds } })
+        .session(session);
+
+      if (roleCount !== roleIds.length) {
+        throw new AppError.Argument(messages.error.changeUserRoles);
+      }
+
+      const currentRoleIds = user.userRoles.map((role: any) =>
+        role._id.toString(),
+      );
+      const rolesToAdd = roleIds.filter(
+        (roleId) => !currentRoleIds.includes(roleId.toString()),
+      );
+
+      const bulkOps = [
+        // Remove roles not in dto.roleIds
+        {
+          deleteMany: {
+            filter: { userId: user._id, roleId: { $nin: roleIds } },
+          },
+        },
+        // Add new roles using insertOne for each role
+        ...rolesToAdd.map((roleId) => ({
+          insertOne: {
+            document: {
+              userId: user._id,
+              roleId,
+            },
+          },
+        })),
+      ];
+
+      if (bulkOps.length > 0) {
+        await this.userRoleModel.bulkWrite(bulkOps, { session });
+      }
+
+      // Update the role names in userRole collection
+      const roleNames = await this.roleModel
+        .find({ _id: { $in: roleIds } })
+        .select('name')
+        .lean();
+
+      await this.userRoleModel.updateMany(
+        { userId: user._id, roleId: { $in: roleIds } },
+        { $set: { roles: roleNames.map((role) => role.name) } },
+        { session },
+      );
+
+      // Update security stamp and Redis
       await this.redisService.db.zRem(
         SECURITY_STAMPS_REDIS_KEY,
         user.securityStamp,
       );
 
       user.securityStamp = Random.generateSecurityStamp();
-      await user.save({ session });
-
-      await session.commitTransaction();
-    } catch (error) {
-      await session.abortTransaction();
-      throw error;
-    } finally {
-      session.endSession();
-    }
+      await this.userModel.updateOne(
+        { _id: user._id },
+        { $set: { securityStamp: user.securityStamp } },
+        { session },
+      );
+    });
   }
 
   async findByProvider(provider: string, sub: string) {

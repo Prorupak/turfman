@@ -15,7 +15,7 @@ describe('RolesService', () => {
   };
 
   const mockRoleModel = {
-    create: jest.fn(), // Mock the create method
+    create: jest.fn(),
     find: jest.fn().mockReturnThis(),
     findOne: jest.fn().mockReturnThis(),
     findById: jest.fn().mockReturnThis(),
@@ -25,7 +25,7 @@ describe('RolesService', () => {
     select: jest.fn().mockReturnThis(),
     lean: jest.fn().mockReturnThis(),
     exec: jest.fn(),
-    startSession: jest.fn().mockResolvedValue(mockSession), // Return the mocked session object
+    startSession: jest.fn().mockResolvedValue(mockSession),
     updateMany: jest.fn(),
   };
 

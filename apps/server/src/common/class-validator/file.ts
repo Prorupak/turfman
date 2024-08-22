@@ -1,5 +1,5 @@
 import { buildMessage, ValidateBy, ValidationOptions } from 'class-validator';
-import { FileType } from 'src/helpers/file-type.helper';
+import { FileType } from 'helpers/file-type.helper';
 
 export function isFile(value: unknown) {
   return Buffer.isBuffer(value);

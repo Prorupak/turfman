@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from 'src/config/config.module';
+import { ConfigModule } from 'config/config.module';
 import { DatabaseModule } from './database/database.module';
 import { RedisModule } from './redis/redis.module';
 import { BullModule } from '@nestjs/bull';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
-import { Config } from 'src/config/config.schema';
+import { Config } from 'config/config.schema';
+import { CloudStorageModule } from './cloud-storage/cloud-storage.module';
+import { MailModule } from './mail/mail.module';
 
 const CORE_MODULES = [
   DatabaseModule,
@@ -14,6 +16,8 @@ const CORE_MODULES = [
   ConfigModule,
   DatabaseModule,
   RedisModule,
+  CloudStorageModule,
+  MailModule,
   ScheduleModule.forRoot(),
   BullModule.forRootAsync({
     imports: [ConfigModule],

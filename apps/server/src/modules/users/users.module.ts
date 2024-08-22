@@ -5,6 +5,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schemas/users.schema';
 import { Role, RoleSchema } from '../roles/schemas/roles.schema';
 import { UserLogins, UserLoginsSchema } from './schemas/user-logins.schema';
+import {
+  UserRole,
+  UserRoleSchema,
+} from 'modules/roles/schemas/user-role.schema';
 
 @Module({
   imports: [
@@ -12,6 +16,7 @@ import { UserLogins, UserLoginsSchema } from './schemas/user-logins.schema';
       { name: User.name, schema: UserSchema },
       { name: Role.name, schema: RoleSchema },
       { name: UserLogins.name, schema: UserLoginsSchema },
+      { name: UserRole.name, schema: UserRoleSchema },
     ]),
   ],
   controllers: [UsersController],

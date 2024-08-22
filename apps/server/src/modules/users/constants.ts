@@ -1,5 +1,6 @@
 export const userSelect = {
-  id: 1,
+  _id: 0,
+  id: '$_id',
   username: 1,
   displayName: 1,
   email: 1,
@@ -19,7 +20,8 @@ export const userSelect = {
 };
 
 export const userDetailSelect = {
-  id: 1,
+  _id: 0,
+  id: '$_id',
   displayName: 1,
   username: 1,
   password: 1,
