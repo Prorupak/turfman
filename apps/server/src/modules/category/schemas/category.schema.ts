@@ -120,6 +120,16 @@ export class Category extends Document {
   displayOrder: number;
 
   @ApiPropertyOptional({
+    description: 'Unique slug of the category.',
+    example: 'unique-slug',
+  })
+  @Prop({
+    type: String,
+    required: true,
+  })
+  slug: string;
+
+  @ApiPropertyOptional({
     description: 'Creation date of product.',
     example: 'Thu Aug 22 2024 21:29:50 GMT+0545 (Nepal Time)',
     type: Date,
