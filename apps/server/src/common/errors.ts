@@ -129,6 +129,15 @@ export namespace AppError {
     }
   }
 
+  export class Conflict extends BasicError {
+    constructor(
+      message: string = messages.error.conflict,
+      title: string = messages.error.conflict,
+    ) {
+      super(HttpStatus.CONFLICT, message, title);
+    }
+  }
+
   export class Mongo extends BasicError {
     constructor(
       message: string = messages.error.mongo,

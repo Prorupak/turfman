@@ -123,13 +123,17 @@ export class UsersService {
         $or: [{ _id: idOrEmail.id }, { email: idOrEmail.email }],
       })
       .select(userDetailSelect)
-      .populate('userRoles')
+      .populate({ path: 'userRoles', select: 'roles roleId userId' })
       .lean()
       .exec();
+
+    console.log(JSON.stringify({ user }));
 
     const roles = (user?.userRoles as unknown as UserRole[])?.map(
       (role) => role.roles,
     );
+
+    console.log({ roles });
 
     return {
       ...user,
