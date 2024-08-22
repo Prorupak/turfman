@@ -214,6 +214,7 @@ export class CategoryService {
           parentCategory: new Types.ObjectId(updateCategoryDto.parentCategory),
           relatedCategories: updateCategoryDto?.relatedCategories.flat(),
           ...(updatedSlug && { slug: updatedSlug }),
+          updatedAt: Date.now(),
         },
         { new: true },
       )

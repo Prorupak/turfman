@@ -14,7 +14,10 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export type CategoryDocument = HydratedDocument<Category>;
 
-@Schema({ timestamps: true })
+@Schema({
+  collection: 'categories',
+  timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
+})
 export class Category extends Document {
   @ApiProperty({
     description: 'The unique name of the category.',
@@ -115,6 +118,32 @@ export class Category extends Document {
   @IsNumber()
   @Min(0)
   displayOrder: number;
+
+  @ApiPropertyOptional({
+    description: 'Unique slug of the category.',
+    example: 'unique-slug',
+  })
+  @Prop({
+    type: String,
+    required: true,
+  })
+  slug: string;
+
+  @ApiPropertyOptional({
+    description: 'Creation date of product.',
+    example: 'Thu Aug 22 2024 21:29:50 GMT+0545 (Nepal Time)',
+    type: Date,
+  })
+  @Prop({ type: Date, default: Date.now() })
+  createdAt?: Date;
+
+  @ApiPropertyOptional({
+    description: 'Updated date of product.',
+    example: 'Thu Aug 22 2024 21:29:50 GMT+0545 (Nepal Time)',
+    type: Date,
+  })
+  @Prop({ type: Date, default: Date.now() })
+  updatedAt?: Date;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);
