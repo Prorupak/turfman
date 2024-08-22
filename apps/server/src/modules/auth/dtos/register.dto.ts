@@ -2,7 +2,6 @@ import { Regex } from '@buzz/utils';
 import {
   IsEmail,
   IsNotEmpty,
-  IsOptional,
   IsString,
   Matches,
   MaxLength,
@@ -12,29 +11,26 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class RegisterDto {
   @ApiProperty({
-    example: 'john_doe',
+    example: 'John',
     description:
-      'The username must be between 4 and 16 characters long and match the specified pattern.',
-    maxLength: 16,
-    minLength: 4,
-  })
-  @Matches(Regex.Validate.USERNAME)
-  @MaxLength(16)
-  @MinLength(4)
-  @IsString()
-  @IsNotEmpty()
-  username: string;
-
-  @ApiProperty({
-    example: 'John Doe',
-    description:
-      'The display name, must be a non-empty string with a maximum length of 64 characters.',
+      'The first name, must be a non-empty string with a maximum length of 64 characters.',
     maxLength: 64,
   })
   @MaxLength(64)
   @IsString()
   @IsNotEmpty()
-  displayName: string;
+  firstName: string;
+
+  @ApiProperty({
+    example: 'Doe',
+    description:
+      'The last name, must be a non-empty string with a maximum length of 64 characters.',
+    maxLength: 64,
+  })
+  @MaxLength(64)
+  @IsString()
+  @IsNotEmpty()
+  lastName: string;
 
   @ApiProperty({
     example: 'john.doe@example.com',
@@ -47,8 +43,7 @@ export class RegisterDto {
   @MaxLength(255)
   @IsString()
   @IsNotEmpty()
-  @IsOptional()
-  email?: string;
+  email: string;
 
   @ApiProperty({
     example: 'StrongP@ssw0rd!',

@@ -31,20 +31,14 @@ function getCachedJwtValue(
  */
 export class AuthUser {
   public id: string;
-  public username: string;
   public displayName: string;
   public hasPassword: boolean;
   public email: string;
   public emailConfirmed: boolean;
   public firstName: string;
   public lastName: string;
-  public birthDate: string;
-  public salary: number;
   public roles: Array<string>;
   public photoUrl: string;
-  public coverUrl: string;
-  public themeSource: string;
-  public themeStyle: string;
   public securityStamp: string;
 
   /**
@@ -54,7 +48,6 @@ export class AuthUser {
    */
   constructor(payload?: Record<string, any>) {
     this.id = getCachedJwtValue(payload, 'sub');
-    this.username = getCachedJwtValue(payload, 'username');
     this.displayName = getCachedJwtValue(payload, 'displayName');
     this.hasPassword = getCachedJwtValue(
       payload,
@@ -69,12 +62,8 @@ export class AuthUser {
     );
     this.firstName = getCachedJwtValue(payload, 'firstName');
     this.lastName = getCachedJwtValue(payload, 'lastName');
-    this.birthDate = getCachedJwtValue(payload, 'birthDate');
     this.roles = getCachedJwtValue(payload, 'roles');
     this.photoUrl = getCachedJwtValue(payload, 'photoUrl');
-    this.coverUrl = getCachedJwtValue(payload, 'coverUrl');
-    this.themeSource = getCachedJwtValue(payload, 'themeSource');
-    this.themeStyle = getCachedJwtValue(payload, 'themeStyle');
     this.securityStamp = getCachedJwtValue(payload, 'securityStamp');
   }
 }

@@ -10,7 +10,6 @@ import { UsersModule } from 'modules/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Config } from 'config/config.schema';
-import { MaterialDesignModule } from 'modules/material-design/material-design.module';
 import { CloudStorageModule } from 'core/cloud-storage/cloud-storage.module';
 import { User, UserSchema } from 'modules/users/schemas/users.schema';
 import { VerificationTokensModule } from 'modules/verification-tokens/verification-tokens.module';
@@ -31,7 +30,6 @@ import {
       { name: UserRole.name, schema: UserRoleSchema },
     ]),
     UsersModule,
-    MaterialDesignModule,
     CloudStorageModule,
     VerificationTokensModule,
     MailModule,

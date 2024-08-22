@@ -36,10 +36,6 @@ export class UsersService {
     const query = this.userModel.find();
     const andConditions: any[] = [];
 
-    if (!_.isNil(dto.username)) {
-      andConditions.push({ username: new RegExp(dto.username, 'i') });
-    }
-
     if (!_.isNil(dto.name)) {
       andConditions.push({
         $or: [
@@ -103,19 +99,19 @@ export class UsersService {
     return { records, count: records.length, totalCount };
   }
 
-  async findByUnique(idOrUsername: Partial<{ id: string; username: string }>) {
+  async findByUnique(idOrEmail: Partial<{ id: string; email: string }>) {
     return this.userModel
       .findOne({
-        $or: [{ _id: idOrUsername.id }, { username: idOrUsername.username }],
+        $or: [{ _id: idOrEmail.id }, { email: idOrEmail.email }],
       })
       .select(userSelect)
       .exec();
   }
 
   async findByUniqueWithDetail(
-    idOrUsername: Partial<{
+    idOrEmail: Partial<{
       id: string;
-      username: string;
+      email: string;
     }>,
   ): Promise<
     Omit<User, 'userRoles'> & {
@@ -124,7 +120,7 @@ export class UsersService {
   > {
     const user = await this.userModel
       .findOne({
-        $or: [{ _id: idOrUsername.id }, { username: idOrUsername.username }],
+        $or: [{ _id: idOrEmail.id }, { email: idOrEmail.email }],
       })
       .select(userDetailSelect)
       .populate('userRoles')

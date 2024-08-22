@@ -24,8 +24,9 @@ import {
   GetAllUsersSwaggerDocs,
   GetUserByIdSwaggerDocs,
 } from './users-swagger.decorator';
+import { UserRoles } from 'modules/roles/constants';
 
-@Roles('Administrator')
+@Roles(UserRoles.ADMIN, UserRoles.SUPER_ADMIN)
 @ApiName()
 @Controller('users')
 export class UsersController {

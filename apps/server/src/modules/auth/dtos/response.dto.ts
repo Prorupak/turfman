@@ -11,12 +11,6 @@ export class RegisterResponseDto {
   id: string;
 
   @ApiProperty({
-    description: 'The username of the registered user.',
-    example: 'john_doe',
-  })
-  username: string;
-
-  @ApiProperty({
     description: 'The display name of the registered user.',
     example: 'John Doe',
   })
@@ -57,10 +51,10 @@ export class LoginResponseDto {
 
 export class ConfirmEmailResponseDto {
   @ApiProperty({
-    description: 'Username of the confirmed user',
-    example: 'john_doe',
+    description: 'Email of the confirmed user',
+    example: 'john_doe@gmail.com',
   })
-  username: string;
+  email: string;
 }
 
 export class ForgotPasswordResponseDto {
@@ -73,10 +67,10 @@ export class ForgotPasswordResponseDto {
 
 export class ResetPasswordResponseDto {
   @ApiProperty({
-    description: 'Username of the user whose password was reset',
-    example: 'john_doe',
+    description: 'Email of the user whose password was reset',
+    example: 'john_doe@gmail.com',
   })
-  username: string;
+  email: string;
 }
 
 export class RefreshTokenResponseDto {

@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import dayjs from 'dayjs';
@@ -29,7 +24,6 @@ import {
   UpdateEmailDto,
   UpdateImageDto,
   UpdatePasswordDto,
-  UpdateThemeDto,
 } from './dtos';
 import { RedisService } from 'core/redis/redis.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
@@ -38,8 +32,6 @@ import { CloudStorageService } from '../../core/cloud-storage/cloud-storage.serv
 import { AuthFile } from 'constants/';
 import { AuthUser } from './auth-user.class';
 import { IFile } from 'helpers/file-type.helper';
-import { MaterialDesignService } from 'modules/material-design/material-design.service';
-import _ from 'lodash';
 import { compare, genSalt, hash } from 'bcryptjs';
 import { Random } from 'utils/random.util';
 import { SECURITY_STAMPS_REDIS_KEY } from 'constants/auth';
@@ -77,7 +69,6 @@ export class AuthService {
     private configService: ConfigService<Config>,
     private redisService: RedisService,
     private cloudStorageService: CloudStorageService,
-    private materialDesignService: MaterialDesignService,
     private verificationTokensService: VerificationTokensService,
     private mailService: MailService,
   ) {}
@@ -143,10 +134,10 @@ export class AuthService {
   }
 
   async validateUser(
-    username: string,
+    email: string,
     password: string,
   ): Promise<ReturnType<UsersService['findByUniqueWithDetail']> | null> {
-    const user = await this.usersService.findByUniqueWithDetail({ username });
+    const user = await this.usersService.findByUniqueWithDetail({ email });
 
     if (!user?.password || !(await compare(password, user.password))) {
       return null;
@@ -205,7 +196,7 @@ export class AuthService {
 
   async sendConfirmEmail(user: {
     id: string;
-    username: string;
+    displayName: string;
     email: string;
   }) {
     const expires = dayjs().add(7, 'days');
@@ -225,7 +216,7 @@ export class AuthService {
     confirmationLink.searchParams.set('token', token);
 
     const html = await this.mailService.renderTemplate('confirm-email', {
-      username: user.username,
+      displayName: user.displayName,
       expires: expires.utc().format('YYYY-MM-DD HH:mm:ss'),
       confirmationLink: confirmationLink.toString(),
       userEmail: to,
@@ -265,14 +256,14 @@ export class AuthService {
       VerificationTokenType.VERIFY_EMAIL,
     );
 
-    this.logger.log(`[ConfirmEmail]: ${user.username}`);
+    this.logger.log(`[ConfirmEmail]: ${user.email}`);
 
-    return { username: user.username };
+    return { email: user.email };
   }
 
   async forgotPassword(dto: ForgotPasswordDto) {
     const user = await this.usersService.findByUniqueWithDetail({
-      username: dto.username,
+      email: dto.email,
     });
 
     if (!user || !user.emailConfirmed) {
@@ -345,9 +336,9 @@ export class AuthService {
       ),
     ]);
 
-    this.logger.log(`[ResetPassword]: ${user.username}`);
+    this.logger.log(`[ResetPassword]: ${user.email}`);
 
-    return { username: user.username };
+    return { email: user.email };
   }
 
   async register(dto: RegisterDto) {
@@ -358,13 +349,13 @@ export class AuthService {
       ]);
 
       if (!role) {
-        throw new BadRequestException(Error('Default "User" role not found'));
+        throw new AppError.BadQuery('Default "User" role not found');
       }
 
       // Create the user and userRole in a transaction
       const newUser = new this.userModel({
-        username: dto.username,
-        displayName: dto.displayName,
+        firstName: dto.firstName,
+        lastName: dto.lastName,
         email: dto.email,
         password: hashPassword,
         securityStamp: Random.generateSecurityStamp(),
@@ -385,7 +376,8 @@ export class AuthService {
 
       const result = {
         id: newUser._id.toString(),
-        username: newUser.username,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
         displayName: newUser.displayName,
         email: newUser.email,
       };
@@ -395,7 +387,7 @@ export class AuthService {
         await this.sendConfirmEmail(result);
       }
 
-      this.logger.log(`[Register]: ${result.username}`);
+      this.logger.log(`[Register]: ${result.email}`);
       return {
         ...result,
         createdAt: newUser.createdAt,
@@ -478,7 +470,7 @@ export class AuthService {
         newRefreshToken,
       );
 
-      this.logger.log(`[RefreshToken]: ${user.username}`);
+      this.logger.log(`[RefreshToken]: ${user.email}`);
 
       await session.commitTransaction();
       return {
@@ -503,7 +495,7 @@ export class AuthService {
         .select('id expires revoked user')
         .populate({
           path: 'user',
-          select: 'id username',
+          select: 'id email',
         })
         .session(session)
         .exec();
@@ -516,7 +508,7 @@ export class AuthService {
         (
           refreshToken.user as unknown as {
             _id: Types.ObjectId;
-            username: string;
+            email: string;
           }
         )?._id?.toString() !== userId.toString()
       ) {
@@ -532,7 +524,7 @@ export class AuthService {
 
       await this.revokeRefreshToken(refreshToken.id, ip, session);
       this.logger.log(
-        `[RevokeToken]: ${(refreshToken.user as unknown as User).username}`,
+        `[RevokeToken]: ${(refreshToken.user as unknown as User).email}`,
       );
 
       await session.commitTransaction();
@@ -544,15 +536,15 @@ export class AuthService {
     }
   }
 
-  private getImageCacheKey(username: string, type: 'photo' | 'cover') {
-    return `user:${username}:${type}`;
+  private getImageCacheKey(email: string, type: 'photo' | 'cover') {
+    return `user:${email}:${type}`;
   }
 
   async getImageLink(dto: SearchImageDto, user: AuthUser) {
     const fieldName = dto.type === 'photo' ? 'photoUrl' : 'coverUrl';
 
     const result = await this.usersService.findByUnique({
-      username: user.username,
+      email: user.email,
     });
 
     if (!result) {
@@ -560,7 +552,7 @@ export class AuthService {
     }
 
     return this.cacheManager.wrap(
-      this.getImageCacheKey(user.username, dto.type),
+      this.getImageCacheKey(user.email, dto.type),
       () => this.cloudStorageService.getTemporaryLink(result[fieldName]),
       AuthFile.CACHE_TIME,
     );
@@ -573,34 +565,17 @@ export class AuthService {
       path: user.id,
       mode: { '.tag': 'overwrite' },
     });
-    await this.cacheManager.del(this.getImageCacheKey(user.username, dto.type));
-
-    const theme = dto.theme
-      ? await this.materialDesignService.generateThemeFromImage(image)
-      : {};
+    await this.cacheManager.del(this.getImageCacheKey(user.email, dto.type));
 
     await this.userModel
       .findByIdAndUpdate(
         user.id,
         {
           [fieldName]: result.pathDisplay,
-          ...theme,
         },
         { new: true },
       )
       .exec();
-  }
-
-  async updateTheme(dto: UpdateThemeDto, user: AuthUser) {
-    const theme = !_.isNil(dto.source)
-      ? await this.materialDesignService.generateThemeFromSource(dto.source)
-      : { themeSource: null, themeStyle: null };
-
-    await this.userModel
-      .findByIdAndUpdate(user.id, { ...theme }, { new: true })
-      .exec();
-
-    this.logger.log(`[UpdateTheme]: ${user.username}`);
   }
 
   async updatePassword(
@@ -632,7 +607,7 @@ export class AuthService {
     user.securityStamp = Random.generateSecurityStamp();
     await user.save();
 
-    this.logger.log(`[UpdatePassword]: ${user.username}`);
+    this.logger.log(`[UpdatePassword]: ${user.email}`);
 
     await this.redisService.db.zRem(
       SECURITY_STAMPS_REDIS_KEY,
@@ -662,11 +637,11 @@ export class AuthService {
 
     await this.sendConfirmEmail({
       id: user.id,
-      username: user.username,
+      displayName: user.displayName,
       email: dto.email,
     });
 
-    this.logger.log(`[UpdateEmail]: ${user.username}`);
+    this.logger.log(`[UpdateEmail]: ${user.displayName}`);
   }
 
   async requestVerifyEmail(userId: string) {
@@ -687,9 +662,9 @@ export class AuthService {
     await this.sendConfirmEmail({
       id: user._id.toString(),
       email: user.email,
-      username: user.username,
+      displayName: user.displayName,
     });
-    this.logger.log(`[RequestVerifyEmail]: ${user.username}`);
+    this.logger.log(`[RequestVerifyEmail]: ${user.displayName}`);
 
     return { email: user.email };
   }

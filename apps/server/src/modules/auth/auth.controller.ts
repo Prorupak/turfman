@@ -25,7 +25,6 @@ import {
   UpdateEmailDto,
   UpdateImageDto,
   UpdatePasswordDto,
-  UpdateThemeDto,
 } from './dtos';
 import { Public, User } from 'decorators/auth';
 import {
@@ -39,7 +38,6 @@ import {
   UpdateEmailSwaggerDocs,
   UpdateImageSwaggerDocs,
   UpdatePasswordSwaggerDocs,
-  UpdateThemeSwaggerDocs,
   VerifyEmailSwaggerDocs,
 } from './auth-swagger.decorator.';
 import { LocalAuthGuard, SecureEndpoint } from 'guards';
@@ -170,14 +168,6 @@ export class AuthController {
     } finally {
       await unlink();
     }
-  }
-
-  @Patch('theme')
-  @SecureEndpoint.apply()
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @UpdateThemeSwaggerDocs()
-  async updateTheme(@Body() dto: UpdateThemeDto, @User() user: AuthUser) {
-    await this.authService.updateTheme(dto, user);
   }
 
   @Patch('password')

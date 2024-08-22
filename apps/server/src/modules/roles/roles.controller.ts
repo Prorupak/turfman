@@ -29,8 +29,9 @@ import {
   UpdateRoleDocs,
 } from './swagger.decorator';
 import { SecureEndpoint } from 'guards';
+import { UserRoles } from './constants';
 
-@Roles('Administrator')
+@Roles(UserRoles.ADMIN, UserRoles.SUPER_ADMIN)
 @ApiName()
 @Controller('roles')
 @UseInterceptors(RolesInterceptor)

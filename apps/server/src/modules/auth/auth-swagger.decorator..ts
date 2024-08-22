@@ -24,7 +24,6 @@ import {
   ResetPasswordDto,
   UpdateEmailDto,
   UpdatePasswordDto,
-  UpdateThemeDto,
 } from './dtos';
 
 export const RegisterSwaggerDocs = () => {
@@ -57,7 +56,11 @@ export const LoginSwaggerDocs = () => {
       schema: {
         type: 'object',
         properties: {
-          username: { type: 'string', required: ['true'], example: 'john_doe' },
+          username: {
+            type: 'string',
+            required: ['true'],
+            example: 'john_doe@gmail.com',
+          },
           password: { type: 'string', required: ['true'], example: 'password' },
         },
       },
@@ -237,25 +240,6 @@ export const UpdateImageSwaggerDocs = () => {
     ApiResponse({
       status: HttpStatus.BAD_REQUEST,
       description: 'Invalid file upload or dimensions',
-    }),
-  );
-};
-
-export const UpdateThemeSwaggerDocs = () => {
-  return applyDecorators(
-    ApiOperation({ summary: 'Update the user theme settings' }),
-    ApiBody({
-      type: UpdateThemeDto,
-      description:
-        'The theme source to generate the theme. If left empty, the theme will be reset.',
-    }),
-    ApiResponse({
-      status: HttpStatus.NO_CONTENT,
-      description: 'The theme was successfully updated.',
-    }),
-    ApiResponse({
-      status: 400,
-      description: 'Invalid input or theme source.',
     }),
   );
 };
