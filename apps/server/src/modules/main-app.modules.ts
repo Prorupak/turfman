@@ -4,6 +4,7 @@ import { RolesModule } from './roles/roles.module';
 import { AuthModule } from './auth/auth.module';
 import { VerificationTokensModule } from './verification-tokens/verification-tokens.module';
 import { CategoryModule } from './category/category.module';
+import { ProductModule } from './product/product.module';
 
 const MAIN_APP_MODULES = [
   UsersModule,
@@ -11,6 +12,7 @@ const MAIN_APP_MODULES = [
   AuthModule,
   VerificationTokensModule,
   CategoryModule,
+  ProductModule,
 ];
 
 @Module({
