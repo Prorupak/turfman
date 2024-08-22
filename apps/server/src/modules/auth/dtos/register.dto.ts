@@ -1,5 +1,6 @@
 import { Regex } from '@buzz/utils';
 import {
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsString,
@@ -8,6 +9,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 
 export class RegisterDto {
   @ApiProperty({
@@ -58,4 +60,8 @@ export class RegisterDto {
   @IsString()
   @IsNotEmpty()
   password: string;
+
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
+  isAdmin?: boolean;
 }
