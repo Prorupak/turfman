@@ -43,7 +43,10 @@ import {
   PopulateField,
 } from 'helpers/pagination/pagination.service';
 import { AggregationPipelines } from 'utils/aggregation-pipelines';
-import { productSelectMinimal } from 'modules/product/constants';
+import {
+  productSelectDetails,
+  productSelectMinimal,
+} from 'modules/product/constants';
 import { CreateReturnDto } from './dto/create-return-product.dto';
 import { DashboardService } from 'modules/dashboard/dashboard.service';
 
@@ -602,6 +605,7 @@ export class OrderService {
           .findById(orderId)
           .select(ordersSelectDetails)
           .populate({ path: 'customer', select: userSelect })
+          .populate({ path: 'items.product', select: productSelectDetails })
           .lean()
           .exec();
         if (!order) {
