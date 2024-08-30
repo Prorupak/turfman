@@ -10,6 +10,7 @@ export const userSelect = {
   createdAt: 1,
   updatedAt: 1,
   userRoles: 1,
+  postcode: 1,
 };
 
 export const userDetailSelect = {
@@ -26,4 +27,5 @@ export const userDetailSelect = {
   updatedAt: 1,
   securityStamp: 1,
   userRoles: 1,
+  postcode: 1,
 };
