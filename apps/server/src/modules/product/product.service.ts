@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, Inject } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, Model, Types } from 'mongoose';
 import { Cache } from 'cache-manager';
@@ -11,7 +11,6 @@ import {
   PopulateField,
 } from 'helpers/pagination/pagination.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { PaginationType } from 'helpers/pagination/pagination.types';
 import { SearchProductsDto } from './dto/query-products';
 import { generateSlug, runInTransaction } from 'utils';
 import { CategoryService } from 'modules/category/category.service';
@@ -22,6 +21,7 @@ import {
 } from 'modules/category/schemas/category.schema';
 import { categorySelect, productSelectMinimal } from './constants';
 import { PaginatedProductDetailsResponseDto } from './dto/product-reponse.dto';
+import { PaginationType } from '@buzz/types';
 
 @Injectable()
 export class ProductService {
@@ -150,7 +150,7 @@ export class ProductService {
           .lean()
           .exec();
         if (!product) {
-          throw new NotFoundException(`Product with ID '${id}' not found.`);
+          throw new AppError.NotFound(`Product with ID '${id}' not found.`);
         }
         return product;
       },
@@ -196,7 +196,7 @@ export class ProductService {
           .findById(relatedProductId)
           .exec();
         if (!relatedProduct) {
-          throw new NotFoundException(
+          throw new AppError.NotFound(
             `Related product with ID '${relatedProductId}' not found.`,
           );
         }
@@ -347,7 +347,7 @@ export class ProductService {
           .exec();
 
         if (!product) {
-          throw new NotFoundException(
+          throw new AppError.NotFound(
             `Product with ID '${id}' not found or has been modified by another process.`,
           );
         }
@@ -399,5 +399,28 @@ export class ProductService {
         },
       },
     );
+  }
+
+  /**
+   * @description Decreases the stock quantity for a specific product.
+   */
+  async decreaseStock(productId: string, quantity: number): Promise<Product> {
+    const product = await this.productModel.findById(productId).exec();
+
+    if (!product) {
+      throw new AppError.NotFound(`Product with ID '${productId}' not found.`);
+    }
+
+    // Check if there is enough stock to fulfill the order
+    if (product.stock < quantity) {
+      throw new AppError.BadQuery(
+        `Insufficient stock for product '${product.name}'. Available quantity: ${product.stock}.`,
+      );
+    }
+
+    // Decrease the stock and save the product
+    product.stock -= quantity;
+
+    return product.save();
   }
 }
