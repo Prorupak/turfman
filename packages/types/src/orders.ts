@@ -4,6 +4,7 @@
  */
 
 import { PaginatedResponse } from "./pagination";
+import { Product } from "./products";
 import { User } from "./users";
 
 /** Enum for order status values. */
@@ -22,7 +23,7 @@ export type VariantAttributes = {
 
 /** Represents an item within an order. */
 export type OrderItem = {
-  product: string;
+  product: Product;
   quantity: number;
   price: number;
   variantAttributes: VariantAttributes;
