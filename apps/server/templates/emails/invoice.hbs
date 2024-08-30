@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - {{invoiceNumber}}</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: #2c3e50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .total {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <img src="{{companyLogoUrl}}" alt="Company Logo" width="150">
+            <h1>{{companyName}}</h1>
+            <p>{{companyAddress}}</p>
+        </header>
+
+        <!-- Invoice Details -->
+        <section>
+            <h2>Invoice: {{invoiceNumber}}</h2>
+            <p>Date: {{invoiceDate}}</p>
+            <p>Due Date: {{dueDate}}</p>
+            <p>Status: <strong>{{invoiceStatus}}</strong></p>
+        </section>
+
+        <!-- Customer Information -->
+        <section>
+            <h3>Bill To:</h3>
+            <p>{{customerName}}</p>
+            <p>{{customerAddress}}</p>
+            <p>Email: {{customerEmail}}</p>
+            <p>Phone: {{customerPhone}}</p>
+        </section>
+
+        <!-- Order Items -->
+        <section>
+            <h3>Order Details</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>SKU</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each items}}
+                    <tr>
+                        <td>{{this.productName}}</td>
+                        <td>{{this.sku}}</td>
+                        <td>{{this.quantity}}</td>
+                        <td>{{this.unitPrice}}</td>
+                        <td>{{this.total}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Totals -->
+        <section>
+            <table>
+                <tr>
+                    <td colspan="4" class="text-right">Subtotal:</td>
+                    <td class="text-right">{{subtotal}}</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="text-right">Tax ({{taxRate}}%):</td>
+                    <td class="text-right">{{taxAmount}}</td>
+                </tr>
+                <tr class="total">
+                    <td colspan="4" class="text-right">Total:</td>
+                    <td class="text-right">{{grandTotal}}</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Thank you for your business!</p>
+            <p>If you have any questions about this invoice, please contact us at {{companyEmail}} or {{companyPhone}}.
+            </p>
+            <p>Payment due by {{dueDate}}. Late fees may apply.</p>
+        </footer>
+    </div>
+</body>
+
+</html>
