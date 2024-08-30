@@ -19,7 +19,11 @@ import {
   Category,
   CategoryDocument,
 } from 'modules/category/schemas/category.schema';
-import { categorySelect, productSelectMinimal } from './constants';
+import {
+  categorySelect,
+  productSelectDetails,
+  productSelectMinimal,
+} from './constants';
 import { PaginatedProductDetailsResponseDto } from './dto/product-reponse.dto';
 import { PaginationType } from '@buzz/types';
 
@@ -145,6 +149,7 @@ export class ProductService {
       async () => {
         const product = await this.productModel
           .findById(id)
+          .select(productSelectDetails)
           .populate({ path: 'category', select: categorySelect })
           .populate({ path: 'relatedProducts', select: productSelectMinimal })
           .lean()
