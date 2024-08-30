@@ -3,11 +3,11 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Roles } from 'decorators/auth';
 import { ApiName } from 'decorators/openapi';
 import { SecureEndpoint } from 'guards';
-import { OrderService } from 'modules/delivery-configuration/order-management/order-management.service';
+import { OrderService } from 'modules/order-management/order-management.service';
 import { UserRoles } from 'modules/roles/constants';
 import { Periods } from '@buzz/types';
 import { PaginationOffset } from 'common/dtos';
-import { SearchOrdersDto } from 'modules/delivery-configuration/order-management/dto/query-orders.dto';
+import { SearchOrdersDto } from 'modules/order-management/dto/query-orders.dto';
 import { DashboardService } from './dashboard.service';
 
 /**

@@ -5,7 +5,7 @@ import {
   DashboardMetrics,
   DashboardMetricsSchema,
 } from './schema/dashboard-metrics.schema';
-import { OrderManagementModule } from 'modules/delivery-configuration/order-management/order-management.module';
+import { OrderManagementModule } from 'modules/order-management/order-management.module';
 import { ProductModule } from 'modules/product/product.module';
 import { DashboardController } from './dashboard.controller';
 

@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import {
   Order,
   OrderManagementDocument,
-} from 'modules/delivery-configuration/order-management/schemas/order-management.schema';
+} from 'modules/order-management/schemas/order-management.schema';
 import {
   Product,
   ProductDocument,
