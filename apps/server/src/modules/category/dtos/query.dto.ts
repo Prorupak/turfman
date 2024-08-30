@@ -1,3 +1,4 @@
+import { SORT_DIRECTION } from '@buzz/types';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type, Transform } from 'class-transformer';
 import {
@@ -15,7 +16,6 @@ import {
   IsNumber,
 } from 'class-validator';
 import { PaginationOffset } from 'common/dtos';
-import { SORT_DIRECTION } from 'helpers/pagination/pagination.types';
 import _ from 'lodash';
 
 export const CategorySortFields = {
