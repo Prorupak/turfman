@@ -10,6 +10,7 @@ import { DeliveryConfigurationModule } from './delivery-configuration/delivery-c
 import { DashboardModule } from './dashboard/dashboard.module';
 import { AlertsModule } from './alerts/alerts.module';
 import { ReportsModule } from './reports/reports.module';
+import { InvoiceModule } from './invoice/invoice.module';
 
 const MAIN_APP_MODULES = [
   UsersModule,
@@ -23,6 +24,7 @@ const MAIN_APP_MODULES = [
   DashboardModule,
   AlertsModule,
   ReportsModule,
+  InvoiceModule,
 ];
 
 @Module({
