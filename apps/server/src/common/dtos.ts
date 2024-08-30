@@ -21,7 +21,7 @@ export abstract class PaginationOffset {
   @IsNumber()
   @IsOptional()
   @Type(() => Number)
-  skip?: number;
+  skip?: number = 1;
 
   @ApiPropertyOptional({
     description:
@@ -32,11 +32,11 @@ export abstract class PaginationOffset {
     type: Number,
   })
   @Max(100)
-  @Min(10)
+  @Min(1)
   @IsNumber()
   @IsOptional()
   @Type(() => Number)
-  take?: number;
+  take?: number = 10;
 }
 
 export abstract class PaginationCursor<

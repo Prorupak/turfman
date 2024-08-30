@@ -1,4 +1,4 @@
-import { PaginationType } from './pagination.types';
+import { PaginationType } from '@buzz/types';
 
 const DEFAULT_LIMIT = 10;
 

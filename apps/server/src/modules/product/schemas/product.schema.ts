@@ -13,7 +13,10 @@ class VariantOption {
   variantOptions: string[];
 }
 
-@Schema({ timestamps: true })
+@Schema({
+  collection: 'products',
+  timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
+})
 export class Product {
   @ApiProperty({
     description: 'The name of the product.',
@@ -98,7 +101,6 @@ export class Product {
         variantOptions: ['Small', 'Large'],
       },
     ],
-    type: () => [VariantOption],
   })
   @Prop({
     type: [VariantOption],
@@ -113,13 +115,6 @@ export class Product {
         price: 99.99,
         quantity: 50,
         attributes: { Color: 'Black', Size: 'Large' },
-      },
-    ],
-    type: [
-      {
-        price: { type: Number, required: true },
-        quantity: { type: Number, required: true },
-        attributes: { type: Map, of: String, required: true },
       },
     ],
   })
@@ -164,6 +159,22 @@ export class Product {
   soldCount: number;
 
   @ApiPropertyOptional({
+    description: 'The total number of units returned.',
+    example: 10,
+    default: 0,
+  })
+  @Prop({ default: 0 })
+  returnCount: number;
+
+  @ApiPropertyOptional({
+    description: 'Reasons provided by customers for returning the product.',
+    example: ['Damaged product', 'Incorrect size'],
+    type: [String],
+  })
+  @Prop({ type: [String] })
+  returnReasons: string[];
+
+  @ApiPropertyOptional({
     description: 'Indicates if the product is active or available for sale.',
     example: true,
     default: true,
@@ -203,7 +214,7 @@ export class Product {
     additionalProperties: { type: 'number' },
   })
   @Prop({ type: Map, of: Number })
-  pricingByLocation: Map<string, number>;
+  pricingByLocation: Map<string | number, number>;
 
   @ApiPropertyOptional({
     description: 'Customer reviews and ratings.',
@@ -213,14 +224,6 @@ export class Product {
         rating: 5,
         review: 'Excellent product!',
         createdAt: '2024-08-19T12:00:00Z',
-      },
-    ],
-    type: [
-      {
-        userId: { type: String, required: true },
-        rating: { type: Number, required: true, min: 1, max: 5 },
-        review: { type: String },
-        createdAt: { type: Date, default: Date.now },
       },
     ],
   })
@@ -250,13 +253,21 @@ export class Product {
   @Prop({ default: false })
   isArchived: boolean;
 
-  //   @ApiPropertyOptional({
-  //     description: 'References to orders that include this product.',
-  //     example: ['605c78f7bcf86cd799439015', '605c78f7bcf86cd799439016'],
-  //     type: [String],
-  //   })
-  //   @Prop([{ type: Types.ObjectId, ref: 'Order' }])
-  //   orders: Types.ObjectId[];
+  @ApiPropertyOptional({
+    description: 'Creation date of product.',
+    example: 'Thu Aug 22 2024 21:29:50 GMT+0545 (Nepal Time)',
+    type: Date,
+  })
+  @Prop({ type: Date, default: Date.now() })
+  createdAt?: Date;
+
+  @ApiPropertyOptional({
+    description: 'Updated date of product.',
+    example: 'Thu Aug 22 2024 21:29:50 GMT+0545 (Nepal Time)',
+    type: Date,
+  })
+  @Prop({ type: Date, default: Date.now() })
+  updatedAt?: Date;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

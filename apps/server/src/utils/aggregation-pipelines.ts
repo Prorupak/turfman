@@ -3,14 +3,18 @@ import { PipelineStage } from 'mongoose';
 
 export class AggregationPipelines {
   public static getPipelineForGetByIdOrdered(
-    idsArray: string[],
+    idsArray: string[] = [],
     populateFields: PopulateField[] = [],
   ): PipelineStage[] {
-    const pipeline: PipelineStage[] = [
-      { $match: { _id: { $in: idsArray } } },
-      { $addFields: { __order: { $indexOfArray: [idsArray, '$_id'] } } },
-      { $sort: { __order: 1 } },
-    ];
+    const pipeline: PipelineStage[] = [];
+
+    if (idsArray.length) {
+      pipeline.unshift(
+        { $match: { _id: { $in: idsArray } } },
+        { $addFields: { __order: { $indexOfArray: [idsArray, '$_id'] } } },
+        { $sort: { __order: 1 } },
+      );
+    }
 
     if (populateFields && populateFields.length > 0) {
       populateFields.forEach((field) => {

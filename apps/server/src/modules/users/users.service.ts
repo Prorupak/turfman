@@ -244,4 +244,25 @@ export class UsersService {
       .select(userDetailSelect)
       .exec();
   }
+
+  /**
+   * Fetches all users with the 'admin' role.
+   * @returns Promise<string[]> - List of admin user emails
+   */
+  async getAdminEmails(): Promise<string[]> {
+    // Fetch roles for 'admin' and 'super_admin'
+    const roles = await this.userRoleModel
+      .find({ roles: { $in: ['admin', 'super_admin'] } })
+      .select('userId')
+      .lean();
+
+    const adminUserIds = roles.map((role) => new Types.ObjectId(role.userId));
+
+    const admins = await this.userModel
+      .find({ _id: { $in: adminUserIds }, isActive: true })
+      .select('email')
+      .exec();
+
+    return admins.map((admin) => admin.email);
+  }
 }

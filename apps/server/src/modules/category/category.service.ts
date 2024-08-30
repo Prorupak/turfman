@@ -11,11 +11,11 @@ import { generateSlug } from 'utils';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 import { UpdateCategoryDto } from './dtos/update-category.dto';
 import { categorySelect, categorySelectDetails } from './constants';
-import { ISort, PaginationType } from 'helpers/pagination/pagination.types';
 import { PaginationService } from 'helpers/pagination/pagination.service';
 import { REDIS_TTL } from 'constants/global';
 import { RedisService } from 'core/redis/redis.service';
 import { isValidObjectId } from 'mongoose';
+import { ISort, PaginationType } from '@buzz/types';
 
 @Injectable()
 export class CategoryService {

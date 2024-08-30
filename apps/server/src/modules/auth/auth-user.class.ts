@@ -40,6 +40,7 @@ export class AuthUser {
   public roles: Array<string>;
   public photoUrl: string;
   public securityStamp: string;
+  public postcode: string;
 
   /**
    * Creates a new AuthUser instance from a JWT payload.
@@ -65,6 +66,7 @@ export class AuthUser {
     this.roles = getCachedJwtValue(payload, 'roles');
     this.photoUrl = getCachedJwtValue(payload, 'photoUrl');
     this.securityStamp = getCachedJwtValue(payload, 'securityStamp');
+    this.postcode = getCachedJwtValue(payload, 'postcode');
   }
 }
 

@@ -10,17 +10,16 @@ import {
   UserRoleSchema,
 } from 'modules/roles/schemas/user-role.schema';
 
+const mongoose = MongooseModule.forFeature([
+  { name: User.name, schema: UserSchema },
+  { name: Role.name, schema: RoleSchema },
+  { name: UserLogins.name, schema: UserLoginsSchema },
+  { name: UserRole.name, schema: UserRoleSchema },
+]);
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      { name: User.name, schema: UserSchema },
-      { name: Role.name, schema: RoleSchema },
-      { name: UserLogins.name, schema: UserLoginsSchema },
-      { name: UserRole.name, schema: UserRoleSchema },
-    ]),
-  ],
+  imports: [mongoose],
   controllers: [UsersController],
   providers: [UsersService],
-  exports: [UsersService],
+  exports: [UsersService, mongoose],
 })
 export class UsersModule {}
