@@ -9,7 +9,7 @@ import {
 import { OrderService } from 'modules/order-management/order-management.service';
 import { PdfGeneratorService } from 'helpers/pdf/pdf-generator.service';
 import { MailService } from 'core/mail/mail.service';
-import { Order, Product } from '@buzz/types';
+import { Order, Product } from '@turfman/types';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import {

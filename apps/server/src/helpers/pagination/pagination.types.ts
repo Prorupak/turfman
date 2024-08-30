@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PaginationType } from '@buzz/types';
+import { PaginationType } from '@turfman/types';
 export class PaginatedResponse implements PaginationType {
   // for each extension of this, implement the data: T type. Swagger doesnt support generics, so this is the workaround
   // @ApiProperty()

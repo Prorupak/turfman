@@ -15,7 +15,7 @@ import { PaginationService } from 'helpers/pagination/pagination.service';
 import { REDIS_TTL } from 'constants/global';
 import { RedisService } from 'core/redis/redis.service';
 import { isValidObjectId } from 'mongoose';
-import { ISort, PaginationType } from '@buzz/types';
+import { ISort, PaginationType } from '@turfman/types';
 
 @Injectable()
 export class CategoryService {

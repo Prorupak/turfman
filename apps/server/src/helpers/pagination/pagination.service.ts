@@ -8,7 +8,7 @@ import {
   NewPaginationType,
   PaginationPipeline,
   ISelect,
-} from '@buzz/types';
+} from '@turfman/types';
 import { PaginationData, PaginationDataByStartItem } from './pagination-data';
 import { flatten } from 'lodash';
 import { PAGINATION_STRATEGY } from './pagination-strategy.enum';

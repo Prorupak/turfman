@@ -1,4 +1,4 @@
-import { parseData, ParseType } from '@buzz/utils';
+import { parseData, ParseType } from '@turfman/utils';
 import _ from 'lodash';
 
 export namespace Jwt {

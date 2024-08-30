@@ -20,7 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@buzz/utils": "workspace:*",
+    "@turfman/utils": "workspace:*",
     "@nestjs/bull": "^10.2.0",
     "@nestjs/cache-manager": "^2.2.2",
     "@nestjs/common": "^10.0.0",
@@ -66,7 +66,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@buzz/types": "workspace:*",
+    "@turfman/types": "workspace:*",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",

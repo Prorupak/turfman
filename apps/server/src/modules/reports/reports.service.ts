@@ -1,4 +1,4 @@
-import { Periods } from '@buzz/types';
+import { Periods } from '@turfman/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { MailService } from 'core/mail/mail.service';

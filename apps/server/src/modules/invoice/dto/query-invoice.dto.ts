@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PaginationOffset } from 'common/dtos';
-import { SORT_DIRECTION } from '@buzz/types';
+import { SORT_DIRECTION } from '@turfman/types';
 import { InvoiceStatus } from '../schema/invoice.schema';
 
 class DateRangeDto {

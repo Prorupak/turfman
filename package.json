@@ -2,7 +2,7 @@
   "dependencies": {
     "@nestjs/mapped-types": "*"
   },
-  "name": "buzz",
+  "name": "turfman",
   "version": "0.0.0",
   "private": true,
   "workspaces": [

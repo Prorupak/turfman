@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Regex } from '@buzz/utils';
+import { Regex } from '@turfman/utils';
 import {
   IsNotEmpty,
   IsOptional,

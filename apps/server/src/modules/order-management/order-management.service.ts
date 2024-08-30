@@ -36,7 +36,7 @@ import { User, UserDocument } from 'modules/users/schemas/users.schema';
 import { REDIS_TTL } from 'constants/global';
 import { orderSelectBase, ordersSelectDetails } from './constants';
 import { userSelect } from 'modules/users/constants';
-import { PaginationType, Periods, SingleOrderResponse } from '@buzz/types';
+import { PaginationType, Periods, SingleOrderResponse } from '@turfman/types';
 import { SearchOrdersDto } from './dto/query-orders.dto';
 import {
   PaginationService,

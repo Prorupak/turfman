@@ -16,7 +16,7 @@ import {
 import { PaginationOffset } from 'common/dtos'; // Replace with the correct path
 import { OrderStatus } from '../order-management.enum'; // Adjust the import path as needed
 import { ProductSortFields } from 'modules/product/dto/query-products';
-import { SORT_DIRECTION } from '@buzz/types';
+import { SORT_DIRECTION } from '@turfman/types';
 
 /**
  * Data Transfer Object for specifying date range filters.

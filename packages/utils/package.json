@@ -1,5 +1,5 @@
 {
-  "name": "@buzz/utils",
+  "name": "@turfman/utils",
   "type": "commonjs",
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",

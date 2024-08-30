@@ -5,7 +5,7 @@ import { ApiName } from 'decorators/openapi';
 import { SecureEndpoint } from 'guards';
 import { OrderService } from 'modules/order-management/order-management.service';
 import { UserRoles } from 'modules/roles/constants';
-import { Periods } from '@buzz/types';
+import { Periods } from '@turfman/types';
 import { PaginationOffset } from 'common/dtos';
 import { SearchOrdersDto } from 'modules/order-management/dto/query-orders.dto';
 import { DashboardService } from './dashboard.service';

@@ -23,7 +23,7 @@ import { FindOneParams } from 'common/dtos';
 import { UpdateOrderManagementDto } from './dto/update-order-management.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { ApiName } from 'decorators/openapi';
-import { PaginatedResponse, SingleOrderResponse } from '@buzz/types';
+import { PaginatedResponse, SingleOrderResponse } from '@turfman/types';
 import { SearchOrdersDto } from './dto/query-orders.dto';
 import { Roles, User } from 'decorators/auth';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';

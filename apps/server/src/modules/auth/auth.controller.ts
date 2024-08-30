@@ -46,7 +46,7 @@ import { AppError } from 'common/errors';
 import { messages } from 'constants/messages';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CommonFile } from 'constants/';
-import { Regex } from '@buzz/utils';
+import { Regex } from '@turfman/utils';
 import { Multer } from 'helpers/multer.helper';
 import { AuthUser } from './auth-user.class';
 

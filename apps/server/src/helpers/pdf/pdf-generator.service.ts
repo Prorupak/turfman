@@ -1,4 +1,4 @@
-import { Order, Product } from '@buzz/types';
+import { Order, Product } from '@turfman/types';
 import { Injectable } from '@nestjs/common';
 import { Invoice } from 'modules/invoice/schema/invoice.schema';
 import { PDFDocument, rgb } from 'pdf-lib';

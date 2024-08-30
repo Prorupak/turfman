@@ -1,4 +1,4 @@
-import { SORT_DIRECTION } from '@buzz/types';
+import { SORT_DIRECTION } from '@turfman/types';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type, Transform } from 'class-transformer';
 import {

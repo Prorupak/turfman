@@ -1,4 +1,4 @@
-import { Regex } from '@buzz/utils';
+import { Regex } from '@turfman/utils';
 import {
   IsBoolean,
   IsEmail,

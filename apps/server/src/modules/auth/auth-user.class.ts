@@ -1,5 +1,5 @@
 import { Jwt } from 'helpers/jwt.helper';
-import { ParseType } from '@buzz/utils';
+import { ParseType } from '@turfman/utils';
 
 const jwtCache = new Map();
 

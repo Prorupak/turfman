@@ -25,7 +25,7 @@ import {
   productSelectMinimal,
 } from './constants';
 import { PaginatedProductDetailsResponseDto } from './dto/product-reponse.dto';
-import { PaginationType } from '@buzz/types';
+import { PaginationType } from '@turfman/types';
 
 @Injectable()
 export class ProductService {

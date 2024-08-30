@@ -1,5 +1,5 @@
 {
-  "name": "@buzz/types",
+  "name": "@turfman/types",
   "type": "commonjs",
   "version": "1.0.0",
   "description": "A shared TypeScript types package used across both the web and server applications in our monorepo. This package provides type definitions for consistent type safety and reusability throughout the project.",
