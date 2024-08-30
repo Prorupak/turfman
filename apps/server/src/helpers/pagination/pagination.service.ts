@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { Model, PipelineStage } from 'mongoose';
 import {
   ISort,
-  IPaginatedResponse,
+  PaginatedResponse,
   PaginationType,
   SORT_DIRECTION,
   NewPaginationType,
   PaginationPipeline,
   ISelect,
-} from './pagination.types';
+} from '@buzz/types';
 import { PaginationData, PaginationDataByStartItem } from './pagination-data';
 import { flatten } from 'lodash';
 import { PAGINATION_STRATEGY } from './pagination-strategy.enum';
@@ -31,7 +31,8 @@ export class PaginationService {
     populate: PopulateField[] = [],
     select: ISelect = {},
     sort: ISort = { updatedAt: SORT_DIRECTION.DESC },
-  ): Promise<PaginationPipeline<PaginationData>> {
+    remainingStages: PipelineStage[] = [],
+  ): Promise<PaginationPipeline<PaginationData, PipelineStage>> {
     const paginationData = new PaginationData({ ...pagination });
 
     const populateStages = flatten(
@@ -73,7 +74,11 @@ export class PaginationService {
         return returnData;
       }),
     );
-    const mainPipeline = [{ $match: matchFilter }, ...populateStages];
+    const mainPipeline = [
+      { $match: matchFilter },
+      ...populateStages,
+      ...remainingStages,
+    ];
 
     const countResult = await model.aggregate([
       ...mainPipeline,
@@ -112,11 +117,13 @@ export class PaginationService {
     const paginationPipeline: PipelineStage[] = [
       ...mainPipeline,
       ...sortPipeLine,
-      ...(Object.values(select).length && [
-        {
-          $project: select,
-        },
-      ]),
+      ...(Object.values(select).length
+        ? [
+            {
+              $project: select,
+            },
+          ]
+        : []),
       { $skip: (paginationData.page - 1) * paginationData.perPage },
       { $limit: paginationData.perPage },
     ];
@@ -134,8 +141,9 @@ export class PaginationService {
     pagination: PaginationType,
     populate: PopulateField[] = [],
     select: ISelect = {},
-    sort: ISort = { updatedAt: SORT_DIRECTION.DESC }, // default: sort by updatedAt descending
-  ): Promise<IPaginatedResponse<T>> {
+    sort: ISort = { updatedAt: SORT_DIRECTION.DESC }, // default: sort by updatedAt descendinggetPaginatedQueryResponse
+    remainingStages: PipelineStage[] = [],
+  ): Promise<PaginatedResponse<T>> {
     const { paginationPipeline, paginationData } =
       await this.getPaginationPipelineByPage(
         model,
@@ -144,6 +152,7 @@ export class PaginationService {
         populate,
         select,
         sort,
+        remainingStages,
       );
 
     const data = await model.aggregate(paginationPipeline);
@@ -161,7 +170,7 @@ export class PaginationService {
     pagination: PaginationType,
     populate: PopulateField[] = [],
     sort: ISort = { updatedAt: SORT_DIRECTION.DESC }, // default: sort by updatedAt descending
-  ): Promise<IPaginatedResponse<T>> {
+  ): Promise<PaginatedResponse<T>> {
     const paginationData = new PaginationData({ ...pagination });
 
     const populateStages = flatten(
@@ -218,7 +227,7 @@ export class PaginationService {
     pagination: NewPaginationType,
     populate: PopulateField[] = [],
     sort: ISort = { updatedAt: SORT_DIRECTION.DESC }, // default: sort by updatedAt descending
-  ): Promise<PaginationPipeline<PaginationDataByStartItem>> {
+  ): Promise<PaginationPipeline<PaginationDataByStartItem, PipelineStage>> {
     const paginationData = new PaginationDataByStartItem({ ...pagination });
 
     const populateStages = flatten(
@@ -314,7 +323,7 @@ export class PaginationService {
     pagination: NewPaginationType,
     populate: PopulateField[] = [],
     sort: ISort = { updatedAt: SORT_DIRECTION.DESC }, // default: sort by updatedAt descending
-  ): Promise<IPaginatedResponse<T>> {
+  ): Promise<PaginatedResponse<T>> {
     const { paginationPipeline, paginationData } =
       await this.getPaginationPipelineByStartItem(
         userId,
