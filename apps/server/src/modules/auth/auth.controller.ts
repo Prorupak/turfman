@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Headers,
   HttpCode,
   HttpStatus,
@@ -49,6 +50,7 @@ import { CommonFile } from 'constants/';
 import { Regex } from '@turfman/utils';
 import { Multer } from 'helpers/multer.helper';
 import { AuthUser } from './auth-user.class';
+import { UsersService } from 'modules/users/users.service';
 
 @ApiName()
 @Controller('auth')
@@ -68,6 +70,13 @@ export class AuthController {
   @LoginSwaggerDocs()
   async login(@Req() req: Request, @Ip() ip: string) {
     return this.authService.login(req.user as any, ip);
+  }
+
+  @Get('check-session')
+  async checkSession(
+    @User() user: Awaited<ReturnType<UsersService['findByUniqueWithDetail']>>,
+  ) {
+    return this.authService.checkSession(user);
   }
 
   @Post('confirm-email')

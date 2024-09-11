@@ -6,7 +6,8 @@
     "outDir": "dist",
     "rootDir": ".",
     "types": ["@types/jest", "node"],
-    "declaration": true
+    "declaration": true,
+    "target": "ES2021"
   },
   "include": ["src", "__tests__", "node"],
   "exclude": ["node_modules", "dist"]

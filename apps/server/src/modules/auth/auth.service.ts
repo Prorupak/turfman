@@ -405,9 +405,23 @@ export class AuthService {
   ) {
     this.logger.log(`[Login]:${user.email}`);
     return {
+      user: {
+        id: user.id,
+        email: user.email,
+        displayName: user.displayName,
+        emailConfirmed: user.emailConfirmed,
+        postcode: user.postcode,
+        roles: user.userRoles,
+      },
       accessToken: await this.generateAccessToken(user),
       refreshToken: await this.generateRefreshToken(user.id, ipAddress),
     };
+  }
+
+  async checkSession(
+    user: Awaited<ReturnType<UsersService['findByUniqueWithDetail']>>,
+  ) {
+    return user;
   }
 
   private async revokeRefreshToken(

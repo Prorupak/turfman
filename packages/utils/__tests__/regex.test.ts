@@ -1,4 +1,4 @@
-import { Regex } from "../src/regex";
+import { Regex } from "../src/functions/regex";
 
 describe("Regex.CommonType", () => {
   test("BOOLEAN_POSITIVE matches correct values", () => {

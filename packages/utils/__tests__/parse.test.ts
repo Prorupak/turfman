@@ -1,4 +1,4 @@
-import { parseData, ParseType } from "../src/parse";
+import { parseData, ParseType } from "../src/functions/parse";
 
 describe("parseData", () => {
   test("parses a number correctly", () => {

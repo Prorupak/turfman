@@ -12,11 +12,20 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
+    "publish-utils": "turbo build --filter='@turfman/utils' && cd packages/utils && npm publish --access public && cd ../../",
+    "publish-tw": "turbo build --filter='@turfman/tailwind-config' && cd packages/tailwind-config && npm publish --access public && cd ../../",
+    "publish-ui": "turbo build --filter='@turfman/ui' && cd packages/ui && npm publish --access public && cd ../../",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "@types/node": "^22.5.1",
+    "dpdm": "^3.14.0",
+    "event-stream": "^4.0.1",
+    "picocolors": "^1.0.1",
     "prettier": "^3.2.5",
+    "prettier-plugin-organize-imports": "^4.0.0",
+    "prettier-plugin-tailwindcss": "^0.6.6",
     "turbo": "^2.0.14",
     "typescript": "^5.5.4"
   },

@@ -131,9 +131,7 @@ export class UsersService {
 
     const roles = (user?.userRoles as unknown as UserRole[])?.map(
       (role) => role.roles,
-    );
-
-    console.log({ roles });
+    )[0];
 
     return {
       ...user,

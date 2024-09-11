@@ -1,27 +1,46 @@
 {
-  "name": "web",
+  "name": "@turfman/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
-    "build": "next build",
+    "dev": "next dev",
+    "dev:turbo": "next dev --turbo",
+    "build": "NODE_OPTIONS='--max-old-space-size=4096' TS_CONFIG_PATH='./tsconfig.build.json' next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "dcd": "npx tsx ../../scripts/detectCircularDependencies.ts",
+    "analyze-bundle": "node ../../scripts/bundleAnalyzer.mjs"
   },
   "dependencies": {
-    "@repo/ui": "workspace:*",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@svgr/webpack": "^8.1.0",
+    "@turfman/tailwind-config": "workspace:*",
+    "@turfman/ui": "^0.0.1",
+    "@turfman/utils": "workspace:*",
+    "lucide-react": "^0.436.0",
     "next": "15.0.0-rc.0",
+    "next-auth": "^4.24.7",
+    "nextjs-toploader": "^3.6.15",
     "react": "19.0.0-rc-f994737d14-20240522",
-    "react-dom": "19.0.0-rc-f994737d14-20240522"
+    "react-dom": "19.0.0-rc-f994737d14-20240522",
+    "sonner": "^1.5.0"
   },
   "devDependencies": {
+    "@chakra-ui/cli": "^2.4.1",
     "@repo/eslint-config": "workspace:*",
+    "@turfman/types": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@types/circular-dependency-plugin": "^5.0.8",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "autoprefixer": "^10.4.20",
+    "circular-dependency-plugin": "^5.2.2",
     "eslint": "^8",
     "eslint-config-next": "15.0.0-rc.0",
+    "postcss": "^8.4.44",
+    "tailwindcss": "^3.4.10",
     "typescript": "^5.5.4"
   }
 }

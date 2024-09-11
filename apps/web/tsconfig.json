@@ -5,7 +5,15 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "rootDir": ".",
+    "paths": {
+      "@/components/*": ["./components/*"],
+      "@/middlewares/*": ["./middlewares/*"],
+      "@/providers/*": ["./providers/*"],
+      "@/styles/*": ["./styles/*"],
+      "@/app/*": ["./app/*"]
+    }
   },
   "include": [
     "next-env.d.ts",
