@@ -63,6 +63,12 @@ export const configSchema = z.object({
 
   // auth
   RESET_PASSWORD_URL: z.string().url().optional(),
+
+  // client_url
+  CLIENT_URL: z.string().url().optional(),
+
+  // allowed origins
+  ALLOWED_ORIGINS: z.string().optional(),
 });
 
 export type Config = z.infer<typeof configSchema>;

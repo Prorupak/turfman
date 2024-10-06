@@ -39,3 +39,26 @@ code .line::before {
   background-color: #d1d5db;
   border-radius: 10px;
 }
+
+.sales-activity-flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  gap: 16px;
+}
+
+.activity-item-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.activity-item {
+  text-align: center;
+  padding: 16px;
+}
+
+.activity-divider {
+  height: 1000px;
+  margin: 0 16px;
+}

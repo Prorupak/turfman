@@ -3,8 +3,9 @@ import { Providers } from "../providers";
 import { Toaster } from "../components";
 import NextTopLoader from "nextjs-toploader";
 import { inter, satoshi } from "@/styles/fonts";
-import "@/styles/global.css";
 import { cn } from "@turfman/utils";
+import "@/styles/global.css";
+import "@radix-ui/themes/styles.css";
 
 export const metadata: Metadata = {
   title: "Turfman",
@@ -15,14 +16,6 @@ export const metadata: Metadata = {
     icon: "Turfman-icon.png",
   },
 };
-
-// export const viewport: Viewport = {
-//   themeColor: [
-//     { media: "(prefers-color-scheme: dark)", color: "#27272a" },
-//     { media: "(prefers-color-scheme: light)", color: "#f4f4f5" },
-//   ],
-//   colorScheme: "dark light",
-// };
 
 export default function RootLayout({
   children,

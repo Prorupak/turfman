@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronsRight } from "@/components/icons";
+import ChevronsRight from "@/components/icons/chevrons-right";
 import { cn } from "@turfman/utils";
 import Link from "next/link";
 import { useState } from "react";

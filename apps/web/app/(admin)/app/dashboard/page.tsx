@@ -1,14 +1,14 @@
 "use client";
 import { toast } from "sonner";
+import { ProductSalesData, SalesActivity } from "./_components";
+import { Flex } from "antd";
 
 const page = (): JSX.Element => {
-  const notify = () => {
-    toast.success("Hello world");
-  };
   return (
-    <form className="flex flex-col gap-4" action={notify}>
-      <button className="text-red-500">Hello world</button>
-    </form>
+    <Flex vertical gap={4} className="w-max">
+      <SalesActivity />
+      <ProductSalesData />
+    </Flex>
   );
 };
 

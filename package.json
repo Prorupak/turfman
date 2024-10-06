@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev --parallel",
+    "dev": "turbo run dev --parallel --filter='@turfman/web' --filter='@turfman/server'",
     "publish-utils": "turbo build --filter='@turfman/utils' && cd packages/utils && npm publish --access public && cd ../../",
     "publish-tw": "turbo build --filter='@turfman/tailwind-config' && cd packages/tailwind-config && npm publish --access public && cd ../../",
     "publish-ui": "turbo build --filter='@turfman/ui' && cd packages/ui && npm publish --access public && cd ../../",

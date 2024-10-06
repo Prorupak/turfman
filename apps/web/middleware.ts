@@ -1,6 +1,15 @@
-import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { NextRequest } from "next/server";
 
-export default function middleware() {}
+export default async function middleware(req: NextRequest) {
+  let path = req.nextUrl.pathname;
+
+  const session = (await getToken({
+    req,
+    secret: process.env.NEXTAUTH_SECRET,
+  })) as any;
+  console.log({ session });
+}
 
 export const config = {
   matcher: [

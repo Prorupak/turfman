@@ -1,7 +1,6 @@
 {
   "name": "@turfman/utils",
   "version": "0.0.1",
-  "type": "commonjs",
   "author": "Rupak Sapkota <rupaksapkota2000@gmail.com>",
   "homepage": "https://theturfman.com.au",
   "repository": {
@@ -32,22 +31,23 @@
     ]
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsc",
     "dev": "tsup --watch",
     "check-types": "tsc --noEmit",
     "lint": "eslint src/",
     "test": "jest",
     "test:watch": "jest --watch"
   },
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
+  "main": "./dist/src/index.js",
+  "module": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
   "files": [
     "dist/**"
   ],
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/jest": "^29.5.2",
+    "@types/ms": "^0.7.34",
     "@types/node": "^22.4.0",
     "@types/punycode": "^2.1.4",
     "@types/react": "^18.3.5",
@@ -81,6 +81,7 @@
   "dependencies": {
     "@turfman/ui": "^0.0.1",
     "clsx": "^2.1.1",
+    "ms": "^2.1.3",
     "tailwind-merge": "^2.5.2"
   },
   "peerDependencies": {

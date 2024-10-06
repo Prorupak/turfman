@@ -12,7 +12,9 @@
       "@/middlewares/*": ["./middlewares/*"],
       "@/providers/*": ["./providers/*"],
       "@/styles/*": ["./styles/*"],
-      "@/app/*": ["./app/*"]
+      "@/app/*": ["./app/*"],
+      "@/hooks/*": ["./hooks/*"],
+      "@/lib/*": ["./lib/*"]
     }
   },
   "include": [
